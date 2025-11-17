@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Project Risk Management System</title>
+  <style>
+    /* 기본 스타일 설정 (Dark Mode) */
+    :root {
+      --bg-color: #111827;      /* 배경색: 짙은 네이비 */
+      --card-bg: #1f2937;       /* 카드 배경 */
+      --text-primary: #f3f4f6;  /* 메인 텍스트 */
+      --text-secondary: #9ca3af;/* 서브 텍스트 */
+      --accent: #3b82f6;        /* 강조색 (Blue) */
+      --border: #374151;        /* 테두리 */
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-primary);
+      line-height: 1.6;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    /* 1. 헤더 섹션 */
+    header {
+      text-align: center;
+      margin-bottom: 60px;
+      padding-bottom: 40px;
+      border-bottom: 1px solid var(--border);
+    }
+    .project-tag {
+      display: inline-block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--accent);
+      background: rgba(59, 130, 246, 0.1);
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 12px;
+      border: 1px solid rgba(59, 130, 246, 0.2);
+    }
+    h1 {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .subtitle {
+      color: var(--text-secondary);
+      font-size: 18px;
+    }
+
+    /* 2. AS-IS vs TO-BE 비교 섹션 */
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 60px;
+    }
+    .comp-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 30px;
+    }
+    .comp-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .comp-list {
+      list-style: none;
+      padding: 0;
+    }
+    .comp-list li {
+      margin-bottom: 12px;
+      padding-left: 24px;
+      position: relative;
+      color: var(--text-secondary);
+      font-size: 15px;
+    }
+    .comp-list li::before {
+      content: "•";
+      position: absolute;
+      left: 6px;
+      color: var(--text-secondary);
+    }
+    /* AS-IS 스타일 */
+    .as-is { border-left: 4px solid #ef4444; } 
+    .as-is .comp-title { color: #ef4444; }
+    
+    /* TO-BE 스타일 */
+    .to-be { border-left: 4px solid #10b981; }
+    .to-be .comp-title { color: #10b981; }
+    .to-be .comp-list li { color: var(--text-primary); }
+
+    /* 3. 워크플로우 (화살표 흐름) */
+    .workflow-section {
+      margin-bottom: 60px;
+    }
+    .section-header {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 30px;
+      border-left: 4px solid var(--accent);
+      padding-left: 16px;
+    }
+    
+    .flow-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--card-bg);
+      padding: 40px 20px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      position: relative;
+      flex-wrap: wrap; /* 모바일 대응 */
+      gap: 20px;
+    }
+
+    .flow-step {
+      flex: 1;
+      text-align: center;
+      position: relative;
+      min-width: 180px;
+    }
+
+    .icon-circle {
+      width: 70px;
+      height: 70px;
+      background: #111827;
+      border: 2px solid var(--accent);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      margin: 0 auto 16px;
+      z-index: 2;
+      position: relative;
+    }
+
+    .step-title {
+      font-weight: 700;
+      font-size: 16px;
+      margin-bottom: 8px;
+      color: var(--text-primary);
+    }
+    .step-desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.4;
+    }
+
+    /* 화살표 스타일 (Desktop) */
+    @media (min-width: 900px) {
+      .flow-step:not(:last-child)::after {
+        content: "→"; /* 화살표 아이콘 */
+        position: absolute;
+        top: 20px;
+        right: -50%; 
+        width: 100%;
+        text-align: center;
+        font-size: 24px;
+        color: var(--text-secondary);
+        opacity: 0.5;
+        z-index: 1;
+      }
+    }
+    /* 화살표 스타일 (Mobile) */
+    @media (max-width: 899px) {
+      .flow-container { flex-direction: column; }
+      .flow-step:not(:last-child)::after {
+        content: "↓";
+        display: block;
+        margin: 10px auto;
+        font-size: 24px;
+        color: var(--text-secondary);
+        position: static;
+      }
+    }
+
+    /* 4. 성과 데이터 (KPI) */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+    .kpi-box {
+      background: linear-gradient(145deg, #1f2937, #111827);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px 10px;
+      text-align: center;
+    }
+    .kpi-num {
+      font-size: 36px;
+      font-weight: 800;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 4px;
+    }
+    .kpi-label {
+      font-size: 14px;
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+    .kpi-sub {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 6px;
+      display: block;
+    }
+
+    @media (max-width: 768px) {
+      .comparison-grid { grid-template-columns: 1fr; }
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    
+    <header>
+      <span class="project-tag">SYSTEM ARCHITECTURE</span>
+      <h1>현장 리스크 관리 자동화 시스템</h1>
+      <p class="subtitle">데이터 표준화 및 실시간 대응 체계 구축</p>
+    </header>
+
+    <div class="comparison-grid">
+      <div class="comp-card as-is">
+        <div class="comp-title">AS-IS (기존 방식)</div>
+        <ul class="comp-list">
+          <li>주간(Week) 단위 수기 보고로 인한 시차 발생</li>
+          <li>작성자별 기준 상이로 데이터 정량화 불가</li>
+          <li>단순 취합 및 분류 업무에 과다 인력 소요</li>
+        </ul>
+      </div>
+
+      <div class="comp-card to-be">
+        <div class="comp-title">TO-BE (개선 모델)</div>
+        <ul class="comp-list">
+          <li><strong>실시간(Real-time)</strong> 모바일 보고 체계 전환</li>
+          <li><strong>AI 기반</strong> 표준 공종/유형 44종 자동 분류</li>
+          <li><strong>Rule-set</strong> 기반 고위험군 자동 선별 및 알림</li>
+        </ul>
+      </div>
+    </div>
+
+    <section class="workflow-section">
+      <div class="section-header">System Workflow</div>
+      <div class="flow-container">
+        
+        <div class="flow-step">
+          <div class="icon-circle">📝</div>
+          <div class="step-title">현장 데이터 입력</div>
+          <div class="step-desc">모바일 폼 접근<br>핵심 5개 항목 기입</div>
+        </div>
+
+        <div class="flow-step">
+          <div class="icon-circle">⚙️</div>
+          <div class="step-title">AI 자동 분석</div>
+          <div class="step-desc">Gemini LLM 연동<br>리스크 유형/공종 분류</div>
+        </div>
+
+        <div class="flow-step">
+          <div class="icon-circle">⚡</div>
+          <div class="step-title">트리거 필터링</div>
+          <div class="step-desc">Critical Trigger<br>위험도 점수 산출</div>
+        </div>
+
+        <div class="flow-step">
+          <div class="icon-circle">📊</div>
+          <div class="step-title">의사결정 지원</div>
+          <div class="step-desc">대시보드 시각화<br>관리 등급 지정</div>
+        </div>
+
+      </div>
+    </section>
+
+    <section>
+      <div class="section-header">Key Performance Indicators</div>
+      <div class="kpi-grid">
+        <div class="kpi-box">
+          <span class="kpi-num">99%</span>
+          <span class="kpi-label">대응 시간 단축</span>
+          <span class="kpi-sub">1주 → 실시간(분 단위)</span>
+        </div>
+        <div class="kpi-box">
+          <span class="kpi-num">90%</span>
+          <span class="kpi-label">행정 업무 감소</span>
+          <span class="kpi-sub">본사 취합/가공 공수 제거</span>
+        </div>
+        <div class="kpi-box">
+          <span class="kpi-num">100%</span>
+          <span class="kpi-label">데이터 정량화</span>
+          <span class="kpi-sub">전수 데이터 표준화 달성</span>
+        </div>
+        <div class="kpi-box">
+          <span class="kpi-num">50%</span>
+          <span class="kpi-label">관리 효율 증대</span>
+          <span class="kpi-sub">핵심 리스크 집중 관리</span>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+</body>
+</html>
