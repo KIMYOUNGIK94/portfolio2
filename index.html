@@ -52,10 +52,12 @@
       font-size: 32px;
       font-weight: 700;
       margin-bottom: 12px;
+      word-break: keep-all;
     }
     .subtitle {
       color: var(--text-secondary);
       font-size: 18px;
+      word-break: keep-all;
     }
 
     /* 2. AS-IS vs TO-BE 비교 섹션 */
@@ -89,6 +91,7 @@
       position: relative;
       color: var(--text-secondary);
       font-size: 15px;
+      word-break: keep-all;
     }
     .comp-list li::before {
       content: "•";
@@ -162,6 +165,7 @@
       font-size: 13px;
       color: var(--text-secondary);
       line-height: 1.4;
+      word-break: keep-all;
     }
 
     /* 화살표 스타일 (Desktop) */
@@ -193,6 +197,9 @@
     }
 
     /* 4. 성과 데이터 (KPI) */
+    .kpi-section {
+      margin-bottom: 60px;
+    }
     .kpi-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -206,7 +213,7 @@
       text-align: center;
     }
     .kpi-num {
-      font-size: 36px;
+      font-size: 32px;
       font-weight: 800;
       color: var(--accent);
       display: block;
@@ -224,9 +231,54 @@
       display: block;
     }
 
+    /* 5. 핵심 로직 (Features) - 새로 추가된 섹션 */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .feature-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 30px 20px;
+      text-align: center;
+      transition: transform 0.2s;
+    }
+    .feature-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--accent);
+    }
+    .feature-icon {
+      width: 50px;
+      height: 50px;
+      background: var(--accent);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin: 0 auto 20px;
+    }
+    .feature-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: var(--text-primary);
+    }
+    .feature-desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      word-break: keep-all;
+    }
+
+
     @media (max-width: 768px) {
       .comparison-grid { grid-template-columns: 1fr; }
       .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+      .feature-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -235,85 +287,116 @@
   <div class="container">
     
     <header>
-      <span class="project-tag">SYSTEM ARCHITECTURE</span>
-      <h1>현장 리스크 관리 자동화 시스템</h1>
-      <p class="subtitle">데이터 표준화 및 실시간 대응 체계 구축</p>
+      <span class="project-tag">DATA PIPELINE ARCHITECTURE</span>
+      <h1>AI 리스크 데이터 파이프라인 구축</h1>
+      <p class="subtitle">비정형 텍스트(Text)의 정량 데이터(DB) 전환 및 자산화</p>
     </header>
 
     <div class="comparison-grid">
       <div class="comp-card as-is">
-        <div class="comp-title">AS-IS (기존 방식)</div>
+        <div class="comp-title">AS-IS (기존의 한계)</div>
         <ul class="comp-list">
-          <li>주간(Week) 단위 수기 보고로 인한 시차 발생</li>
-          <li>작성자별 기준 상이로 데이터 정량화 불가</li>
-          <li>단순 취합 및 분류 업무에 과다 인력 소요</li>
+          <li>텍스트(Text) 위주 보고로 <strong>데이터 활용 및 분석 불가</strong></li>
+          <li>현장 경험이 축적되지 않고 <strong>휘발성 정보로 소멸</strong></li>
+          <li>사후 보고 중심의 'Club' 성격, <strong>미래 리스크 예측 불가능</strong></li>
         </ul>
       </div>
 
       <div class="comp-card to-be">
-        <div class="comp-title">TO-BE (개선 모델)</div>
+        <div class="comp-title">TO-BE (솔루션)</div>
         <ul class="comp-list">
-          <li><strong>실시간(Real-time)</strong> 모바일 보고 체계 전환</li>
-          <li><strong>AI 기반</strong> 표준 공종/유형 44종 자동 분류</li>
-          <li><strong>Rule-set</strong> 기반 고위험군 자동 선별 및 알림</li>
+          <li>현장 데이터를 실시간 <strong>DB(자산)로 영구 축적</strong></li>
+          <li><strong>AI 기반</strong> 44종 공종/리스크 <strong>자동 라벨링(Labeling)</strong></li>
+          <li>축적된 데이터를 통한 <strong>리스크 시뮬레이션/예측 기반 마련</strong></li>
         </ul>
       </div>
     </div>
 
     <section class="workflow-section">
-      <div class="section-header">System Workflow</div>
+      <div class="section-header">Data Processing Workflow</div>
       <div class="flow-container">
         
         <div class="flow-step">
           <div class="icon-circle">📝</div>
-          <div class="step-title">현장 데이터 입력</div>
-          <div class="step-desc">모바일 폼 접근<br>핵심 5개 항목 기입</div>
+          <div class="step-title">데이터 수집 (Input)</div>
+          <div class="step-desc">모바일 접근성 극대화<br>현장 입력 장벽 제거</div>
         </div>
 
         <div class="flow-step">
           <div class="icon-circle">⚙️</div>
-          <div class="step-title">AI 자동 분석</div>
-          <div class="step-desc">Gemini LLM 연동<br>리스크 유형/공종 분류</div>
+          <div class="step-title">데이터 정제 (Preprocessing)</div>
+          <div class="step-desc">비정형 텍스트를<br>분석 가능한 코드로 변환</div>
         </div>
 
         <div class="flow-step">
           <div class="icon-circle">⚡</div>
-          <div class="step-title">트리거 필터링</div>
-          <div class="step-desc">Critical Trigger<br>위험도 점수 산출</div>
+          <div class="step-title">알고리즘 분석 (Analysis)</div>
+          <div class="step-desc">발생가능성 x 영향도<br>리스크 스코어링</div>
         </div>
 
         <div class="flow-step">
           <div class="icon-circle">📊</div>
-          <div class="step-title">의사결정 지원</div>
-          <div class="step-desc">대시보드 시각화<br>관리 등급 지정</div>
+          <div class="step-title">인사이트 시각화 (Viz)</div>
+          <div class="step-desc">대시보드 연동을 통한<br>선제적 의사결정 지원</div>
         </div>
 
       </div>
     </section>
 
-    <section>
+    <section class="kpi-section">
       <div class="section-header">Key Performance Indicators</div>
       <div class="kpi-grid">
         <div class="kpi-box">
-          <span class="kpi-num">99%</span>
-          <span class="kpi-label">대응 시간 단축</span>
-          <span class="kpi-sub">1주 → 실시간(분 단위)</span>
-        </div>
-        <div class="kpi-box">
-          <span class="kpi-num">90%</span>
-          <span class="kpi-label">행정 업무 감소</span>
-          <span class="kpi-sub">본사 취합/가공 공수 제거</span>
-        </div>
-        <div class="kpi-box">
           <span class="kpi-num">100%</span>
-          <span class="kpi-label">데이터 정량화</span>
-          <span class="kpi-sub">전수 데이터 표준화 달성</span>
+          <span class="kpi-label">데이터 자산화</span>
+          <span class="kpi-sub">경험(Text) → 지식(DB) 전환</span>
         </div>
         <div class="kpi-box">
-          <span class="kpi-num">50%</span>
-          <span class="kpi-label">관리 효율 증대</span>
-          <span class="kpi-sub">핵심 리스크 집중 관리</span>
+          <span class="kpi-num">44 Types</span>
+          <span class="kpi-label">표준 분류 체계</span>
+          <span class="kpi-sub">AI 학습용 데이터셋 확보</span>
         </div>
+        <div class="kpi-box">
+          <span class="kpi-num">99%</span>
+          <span class="kpi-label">정보 지연(Latency) 해소</span>
+          <span class="kpi-sub">주 단위 → 실시간 동기화</span>
+        </div>
+        <div class="kpi-box">
+          <span class="kpi-num">Prediction</span>
+          <span class="kpi-label">예측 모델 기반</span>
+          <span class="kpi-sub">사후약방문 → 선제대응</span>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-header">Core Logic & Value</div>
+      <div class="feature-grid">
+        
+        <div class="feature-card">
+          <div class="feature-icon">A</div>
+          <div class="feature-title">비정형 데이터의 정량화<br>(Data Labeling)</div>
+          <div class="feature-desc">
+            현장의 비정형 텍스트(Text)를 Gemini LLM이 분석하여 44개 표준 공종 코드로 자동 매핑합니다. 휘발되던 현장 경험을 AI 학습이 가능한 <strong>정형 데이터셋(Dataset)</strong>으로 실시간 변환합니다.
+          </div>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">B</div>
+          <div class="feature-title">리스크 평가 알고리즘<br>(Scoring Model)</div>
+          <div class="feature-desc">
+            단순 보고를 넘어, 영향도(Impact)와 발생 가능성(Probability) 기반의 <strong>자체 평가 로직</strong>을 적용하여 리스크를 점수화합니다. 정량적 데이터를 근거로 고위험 이슈를 식별합니다.
+          </div>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">C</div>
+          <div class="feature-title">데이터 기반 의사결정<br>(Data-Driven Decision)</div>
+          <div class="feature-desc">
+            경험과 감에 의존하던 리스크 관리를 <strong>데이터 기반 체계</strong>로 전환했습니다. 축적된 리스크 패턴 데이터를 시각화하여, 사후 대응이 아닌 <strong>선제적 예측 관리</strong>가 가능합니다.
+          </div>
+        </div>
+
       </div>
     </section>
 
