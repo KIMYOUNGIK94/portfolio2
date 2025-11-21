@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Project Risk Management System</title>
+  <style>
+    /* 기본 스타일 설정 (Dark Mode) */
+    :root {
+      --bg-color: #111827;      /* 배경색: 짙은 네이비 */
+      --card-bg: #1f2937;       /* 카드 배경 */
+      --text-primary: #f3f4f6;  /* 메인 텍스트 */
+      --text-secondary: #9ca3af;/* 서브 텍스트 */
+      --accent: #3b82f6;        /* 강조색 (Blue) */
+      --border: #374151;        /* 테두리 */
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-primary);
+      line-height: 1.6;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    /* 1. 헤더 섹션 */
+    header {
+      text-align: center;
+      margin-bottom: 60px;
+      padding-bottom: 40px;
+      border-bottom: 1px solid var(--border);
+    }
+    .project-tag {
+      display: inline-block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--accent);
+      background: rgba(59, 130, 246, 0.1);
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 12px;
+      border: 1px solid rgba(59, 130, 246, 0.2);
+    }
+    h1 {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      word-break: keep-all;
+    }
+    .subtitle {
+      color: var(--text-secondary);
+      font-size: 18px;
+      word-break: keep-all;
+    }
+
+    /* 2. AS-IS vs TO-BE 비교 섹션 */
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 60px;
+    }
+    .comp-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 30px;
+    }
+    .comp-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .comp-list {
+      list-style: none;
+      padding: 0;
+    }
+    .comp-list li {
+      margin-bottom: 12px;
+      padding-left: 24px;
+      position: relative;
+      color: var(--text-secondary);
+      font-size: 15px;
+      word-break: keep-all;
+    }
+    .comp-list li::before {
+      content: "•";
+      position: absolute;
+      left: 6px;
+      color: var(--text-secondary);
+    }
+    /* AS-IS 스타일 */
+    .as-is { border-left: 4px solid #ef4444; } 
+    .as-is .comp-title { color: #ef4444; }
+    
+    /* TO-BE 스타일 */
+    .to-be { border-left: 4px solid #10b981; }
+    .to-be .comp-title { color: #10b981; }
+    .to-be .comp-list li { color: var(--text-primary); }
+
+    /* 3. 워크플로우 (화살표 흐름) */
+    .workflow-section {
+      margin-bottom: 60px;
+    }
+    .section-header {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 30px;
+      border-left: 4px solid var(--accent);
+      padding-left: 16px;
+    }
+    
+    .flow-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--card-bg);
+      padding: 40px 20px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      position: relative;
+      flex-wrap: wrap; /* 모바일 대응 */
+      gap: 20px;
+    }
+
+    .flow-step {
+      flex: 1;
+      text-align: center;
+      position: relative;
+      min-width: 180px;
+    }
+
+    .icon-circle {
+      width: 70px;
+      height: 70px;
+      background: #111827;
+      border: 2px solid var(--accent);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      margin: 0 auto 16px;
+      z-index: 2;
+      position: relative;
+    }
+
+    .step-title {
+      font-weight: 700;
+      font-size: 16px;
+      margin-bottom: 8px;
+      color: var(--text-primary);
+    }
+    .step-desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.4;
+      word-break: keep-all;
+    }
+
+    /* 화살표 스타일 (Desktop) */
+    @media (min-width: 900px) {
+      .flow-step:not(:last-child)::after {
+        content: "→"; /* 화살표 아이콘 */
+        position: absolute;
+        top: 20px;
+        right: -50%; 
+        width: 100%;
+        text-align: center;
+        font-size: 24px;
+        color: var(--text-secondary);
+        opacity: 0.5;
+        z-index: 1;
+      }
+    }
+    /* 화살표 스타일 (Mobile) */
+    @media (max-width: 899px) {
+      .flow-container { flex-direction: column; }
+      .flow-step:not(:last-child)::after {
+        content: "↓";
+        display: block;
+        margin: 10px auto;
+        font-size: 24px;
+        color: var(--text-secondary);
+        position: static;
+      }
+    }
+
+    /* 4. 성과 데이터 (KPI) */
+    .kpi-section {
+      margin-bottom: 60px;
+    }
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+    .kpi-box {
+      background: linear-gradient(145deg, #1f2937, #111827);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px 10px;
+      text-align: center;
+    }
+    .kpi-num {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 4px;
+    }
+    .kpi-label {
+      font-size: 14px;
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+    .kpi-sub {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 6px;
+      display: block;
+    }
+
+    /* 5. 핵심 로직 (Features) - 새로 추가된 섹션 */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .feature-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 30px 20px;
+      text-align: center;
+      transition: transform 0.2s;
+    }
+    .feature-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--accent);
+    }
+    .feature-icon {
+      width: 50px;
+      height: 50px;
+      background: var(--accent);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin: 0 auto 20px;
+    }
+    .feature-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: var(--text-primary);
+    }
+    .feature-desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      word-break: keep-all;
+    }
+
+
+    @media (max-width: 768px) {
+      .comparison-grid { grid-template-columns: 1fr; }
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+      .feature-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    
+    <header>
+      <span class="project-tag">DATA PIPELINE ARCHITECTURE</span>
+      <h1>AI 리스크 데이터 파이프라인 구축</h1>
+      <p class="subtitle">비정형 텍스트(Text)의 정량 데이터(DB) 전환 및 자산화</p>
+    </header>
+
+    <div class="comparison-grid">
+      <div class="comp-card as-is">
+        <div class="comp-title">AS-IS (기존의 한계)</div>
+        <ul class="comp-list">
+          <li>텍스트(Text) 위주 보고로 <strong>데이터 활용 및 분석 불가</strong></li>
+          <li>현장 경험이 축적되지 않고 <strong>휘발성 정보로 소멸</strong></li>
+          <li>사후 보고 중심의 'Club' 성격, <strong>미래 리스크 예측 불가능</strong></li>
+        </ul>
+      </div>
+
+      <div class="comp-card to-be">
+        <div class="comp-title">TO-BE (솔루션)</div>
+        <ul class="comp-list">
+          <li>현장 데이터를 실시간 <strong>DB(자산)로 영구 축적</strong></li>
+          <li><strong>AI 기반</strong> 44종 공종/리스크 <strong>자동 라벨링(Labeling)</strong></li>
+          <li>축적된 데이터를 통한 <strong>리스크 시뮬레이션/예측 기반 마련</strong></li>
+        </ul>
+      </div>
+    </div>
+
+    <section class="workflow-section">
+      <div class="section-header">Data Processing Workflow</div>
+      <div class="flow-container">
+        
+        <div class="flow-step">
+          <div class="icon-circle">📝</div>
+          <div class="step-title">데이터 수집 (Input)</div>
+          <div class="step-desc">모바일 접근성 극대화<br>현장 입력 장벽 제거</div>
+        </div>
+
+        <div class="flow-step">
+          <div class="icon-circle">⚙️</div>
+          <div class="step-title">데이터 정제 (Preprocessing)</div>
+          <div class="step-desc">비정형 텍스트를<br>분석 가능한 코드로 변환</div>
+        </div>
+
+        <div class="flow-step">
+          <div class="icon-circle">⚡</div>
+          <div class="step-title">알고리즘 분석 (Analysis)</div>
+          <div class="step-desc">발생가능성 x 영향도<br>리스크 스코어링</div>
+        </div>
+
+        <div class="flow-step">
+          <div class="icon-circle">📊</div>
+          <div class="step-title">인사이트 시각화 (Viz)</div>
+          <div class="step-desc">대시보드 연동을 통한<br>선제적 의사결정 지원</div>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="kpi-section">
+      <div class="section-header">Key Performance Indicators</div>
+      <div class="kpi-grid">
+        <div class="kpi-box">
+          <span class="kpi-num">100%</span>
+          <span class="kpi-label">데이터 자산화</span>
+          <span class="kpi-sub">경험(Text) → 지식(DB) 전환</span>
+        </div>
+        <div class="kpi-box">
+          <span class="kpi-num">44 Types</span>
+          <span class="kpi-label">표준 분류 체계</span>
+          <span class="kpi-sub">AI 학습용 데이터셋 확보</span>
+        </div>
+        <div class="kpi-box">
+          <span class="kpi-num">99%</span>
+          <span class="kpi-label">정보 지연(Latency) 해소</span>
+          <span class="kpi-sub">주 단위 → 실시간 동기화</span>
+        </div>
+        <div class="kpi-box">
+          <span class="kpi-num">Prediction</span>
+          <span class="kpi-label">예측 모델 기반</span>
+          <span class="kpi-sub">사후약방문 → 선제대응</span>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-header">Core Logic & Value</div>
+      <div class="feature-grid">
+        
+        <div class="feature-card">
+          <div class="feature-icon">A</div>
+          <div class="feature-title">비정형 데이터의 정량화<br>(Data Labeling)</div>
+          <div class="feature-desc">
+            현장의 비정형 텍스트(Text)를 Gemini LLM이 분석하여 44개 표준 공종 코드로 자동 매핑합니다. 휘발되던 현장 경험을 AI 학습이 가능한 <strong>정형 데이터셋(Dataset)</strong>으로 실시간 변환합니다.
+          </div>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">B</div>
+          <div class="feature-title">리스크 평가 알고리즘<br>(Scoring Model)</div>
+          <div class="feature-desc">
+            단순 보고를 넘어, 영향도(Impact)와 발생 가능성(Probability) 기반의 <strong>자체 평가 로직</strong>을 적용하여 리스크를 점수화합니다. 정량적 데이터를 근거로 고위험 이슈를 식별합니다.
+          </div>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">C</div>
+          <div class="feature-title">데이터 기반 의사결정<br>(Data-Driven Decision)</div>
+          <div class="feature-desc">
+            경험과 감에 의존하던 리스크 관리를 <strong>데이터 기반 체계</strong>로 전환했습니다. 축적된 리스크 패턴 데이터를 시각화하여, 사후 대응이 아닌 <strong>선제적 예측 관리</strong>가 가능합니다.
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </div>
+
+</body>
+</html>
